@@ -1,0 +1,80 @@
+﻿<Window x:Class="LF08_Projekt_Web_Log_ETL_mit_WinGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LF08_Projekt_Web_Log_ETL_mit_WinGUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen">
+    <Border CornerRadius="20" Background="#272537">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label x:Name="projectNameLbl"
+                   Grid.Column="1"
+                   Grid.Row="0"
+                   Content="Web Log ETL mit WinGUI"
+                   Foreground="White"
+                   FontSize="40"
+                   HorizontalAlignment="Center"
+                   FontWeight="Bold"
+            />
+            <Grid Grid.Row="1" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <RadioButton x:Name="HomeButton"
+                                 Content="Home"
+                                 Foreground="White"
+                                 FontSize="30"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 FontWeight="Bold" 
+                                 FontStyle="Italic"
+                                 Checked="LoadUserControl"
+                                 />
+                    <Rectangle Height="25"/>
+                    <RadioButton x:Name="importLogFilesButton"
+                                 Content="Import"
+                                 Foreground="White"
+                                 FontSize="30"
+                                 FontWeight="Bold"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Checked="LoadUserControl"
+                                 />
+
+                    <RadioButton x:Name="analyzeLogButton"
+                                 Content="Analyse"
+                                 Foreground="White"
+                                 FontSize="30"
+                                 FontWeight="Bold"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Checked="LoadUserControl"
+                                 />
+
+                    <Rectangle Height="175"/>
+
+                    <RadioButton x:Name="closeButton"
+                                 Content="Beenden"
+                                 Foreground="White"
+                                 FontWeight="Bold"
+                                 FontSize="30"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Checked="LoadUserControl"
+                                 />
+                </StackPanel>
+                <ContentControl x:Name="mainContent"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                />
+            </Grid>
+
+        </Grid>
+    </Border>
+</Window>
