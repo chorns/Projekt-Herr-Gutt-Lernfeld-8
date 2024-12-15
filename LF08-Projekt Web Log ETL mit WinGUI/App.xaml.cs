@@ -38,6 +38,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 			services.AddSingleton<MainWindow>();
 			services.AddSingleton<DefaultUserControl> ();
 			services.AddSingleton<ImportLogUserControl>();
+			services.AddSingleton<Analyse1>();
 			services.AddSingleton<IConnectionStringProvider,ConnectionStringProvider>();
 			services.AddTransient<DbHelper>();
 		}

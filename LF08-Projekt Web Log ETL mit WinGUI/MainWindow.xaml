@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LF08_Projekt_Web_Log_ETL_mit_WinGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="500" Width="800"
         Background="Transparent"
         WindowStartupLocation="CenterScreen">
     <Border CornerRadius="20" Background="#272537">
@@ -31,7 +31,7 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel>
                     <RadioButton x:Name="HomeButton"
-                                 Content="Home"
+                                 Content="Auftrag"
                                  Foreground="White"
                                  FontSize="30"
                                  Style="{StaticResource MenuButtonTheme}"
@@ -49,8 +49,8 @@
                                  Checked="LoadUserControl"
                                  />
 
-                    <RadioButton x:Name="analyzeLogButton"
-                                 Content="Analyse"
+                    <RadioButton x:Name="analyzeLogButtonI"
+                                 Content="Analyse I"
                                  Foreground="White"
                                  FontSize="30"
                                  FontWeight="Bold"
@@ -58,7 +58,25 @@
                                  Checked="LoadUserControl"
                                  />
 
-                    <Rectangle Height="175"/>
+                    <RadioButton x:Name="analyzeLogButtonII"
+                                 Content="Analyse II"
+                                 Foreground="White"
+                                 FontSize="30"
+                                 FontWeight="Bold"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Checked="LoadUserControl"
+                    />
+
+                    <RadioButton x:Name="analyzeLogButtonIII"
+                                 Content="Analyse III"
+                                 Foreground="White"
+                                 FontSize="30"
+                                 FontWeight="Bold"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Checked="LoadUserControl"
+                    />
+
+                    <Rectangle Height="120"/>
 
                     <RadioButton x:Name="closeButton"
                                  Content="Beenden"

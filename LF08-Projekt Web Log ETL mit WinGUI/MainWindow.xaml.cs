@@ -40,6 +40,9 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 					case "importLogFilesButton":
 						page = new ImportLogUserControl();
 						break;
+					case "analyzeLogButtonI":
+						page = new Analyse1();
+						break;
 					case "closeButton":
 						Application.Current.Shutdown();
 						break;

@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿
 using System.IO;
-using System.Text;
 using System.Net;
-using System.Threading.Tasks;
-using Microsoft.Data.Sqlite;
 using System.Data.SQLite;
-using System.Diagnostics.PerformanceData;
 using System.Windows;
-using System.Windows.Documents;
 using LF08_Projekt_Web_Log_ETL_mit_WinGUI.Interfaces;
-using LF08_Projekt_Web_Log_ETL_mit_WinGUI.Services;
+using LF08_Projekt_Web_Log_ETL_mit_WinGUI.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -19,7 +12,8 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 {
     class DbHelper
     {
-        private const string _dbName = "weblogs.db";
+		public const string _tableName = "weblogs";
+		private const string _dbName = "weblogs.db";
         private static string _dbPath= System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory,_dbName);
 		
 		public void InitialiseDatabase()
@@ -39,7 +33,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 		}
         private static void CreateTable(SQLiteConnection connection)
         {
-            string createTable = "CREATE TABLE IF NOT EXISTS weblogs ("+
+            string createTable = $"CREATE TABLE IF NOT EXISTS {_tableName} ("+
                                  "ip_adress TEXT NOT NULL, " +
                                  "identity TEXT,"+
                                  "authentification TEXT,"+
@@ -53,48 +47,8 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
             command.ExecuteNonQuery();
 		}
   
-		public StringBuilder GetColumnNames()
-		{
-			StringBuilder columnNames = new StringBuilder();
-			var connectionStringProvider = App.AppHost.Services.GetRequiredService<ConnectionStringProvider>();
-			using var connection = new SQLiteConnection(connectionStringProvider.GetConnectionString());
-			try
-			{
-				connection.Open();
-				SQLiteCommand cmd = new SQLiteCommand("SELECT name FROM pragma_table_info('weblogs')", connection);
-				SQLiteDataReader reader = cmd.ExecuteReader();
-				while (reader.Read())
-				{
-					columnNames.Append(reader["name"].ToString());
-					columnNames.Append(", ");
-				}
-			}
-			catch(SQLiteException ex)
-			{
-				MessageBox.Show("Es ist ein Fehler aufgetreten!\n\n" + ex);
-			}
-
-			return columnNames;
-		}
-		public string BuildQuery(string filePath, string tableName)
-		{
-			StringBuilder queryBuilder =new StringBuilder();
-			var columns = GetColumnNames();
-			queryBuilder.Append($"INSERT INTO {tableName} (");
-			queryBuilder.Append(string.Join(", ", columns));
-			queryBuilder.Remove(queryBuilder.Length - 1, 1);
-			queryBuilder.Append(") VALUES ");
-
-			columns.Append("(@");
-			columns.Append(string.Join(", @", columns));
-			columns.Append(")");
-
-			queryBuilder.Append(columns);
-			queryBuilder.Append(";");
-			string query = queryBuilder.ToString();
-			return query;
-			
-		}
+		
+		
 		public void ImportData(string filePath)
 		{
 			int counter = 0;
@@ -191,9 +145,59 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 				MessageBox.Show($"Es wurden {counter} ungültige IP-Adressen übersprungen.");
 			}
 		}
-		private bool IpIsValid(string ipAdress)
+		public static bool IpIsValid(string ipAdress)
 		{
 			return IPAddress.TryParse(ipAdress, out _);
 		}
+		public List<LogEintrag> GetFilteredLogEntries(DateTime? startTime, DateTime? endTime, string ipFilter)
+		{
+			var logEntries = new List<LogEintrag>();
+
+			string query = $"SELECT * FROM {_tableName} WHERE 1=1";
+			if (startTime.HasValue)
+				query += " AND timestamp >= @startTime";
+			if (endTime.HasValue)
+				query += " AND timestamp <= @endTime";
+			if (!string.IsNullOrEmpty(ipFilter))
+				query += " AND ip_adress = @ipFilter";
+
+			var connectionStringProvider = App.AppHost.Services.GetRequiredService<IConnectionStringProvider>();
+			using (var connection = new SQLiteConnection(connectionStringProvider.GetConnectionString()))
+			{
+				connection.Open();
+
+				using (var command = new SQLiteCommand(query, connection))
+				{
+					if (startTime.HasValue)
+						command.Parameters.AddWithValue("@startTime", startTime.Value);
+					if (endTime.HasValue)
+						command.Parameters.AddWithValue("@endTime", endTime.Value);
+					if (!string.IsNullOrEmpty(ipFilter))
+						command.Parameters.AddWithValue("@ipFilter", ipFilter);
+
+					using (var reader = command.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							logEntries.Add(new LogEintrag
+							{
+								Id= reader.GetInt32(0),
+								Ip_adress = reader.GetString(1),
+								Identity = reader.GetString(2),
+								Authentification = reader.GetString(3),
+								Timestamp = reader.GetDateTime(4),
+								Request = reader.GetString(5),
+								Http_Statuscode = reader.GetInt32(6),
+								Responsesize = reader.GetInt32(7)
+								
+							});
+						}
+					}
+				}
+			}
+
+			return logEntries;
+		}
 	}
 }
+

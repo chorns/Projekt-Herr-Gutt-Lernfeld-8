@@ -11,7 +11,7 @@
         <Label Content="Pfad: " 
                Foreground="White" 
                HorizontalAlignment="Left" 
-               Margin="46,54,0,0" 
+               Margin="46,61,0,0" 
                VerticalAlignment="Top" 
                Height="44" 
                Width="103"
@@ -20,13 +20,19 @@
                FontStyle="Italic"/>
         <TextBox x:Name="filePathTxt"
                  HorizontalAlignment="Left" 
-                 Margin="154,65,0,0" 
+                 Margin="154,79,0,0" 
                  TextWrapping="NoWrap"
                  VerticalAlignment="Top" 
                  Width="200" 
                  Height="22" MouseDoubleClick="filePathTxt_MouseDoubleClick"/>
         <Button x:Name="importLogButton"
-            Content="Web-Log importieren" HorizontalAlignment="Left" Margin="124,118,0,0" VerticalAlignment="Top" Height="21" Width="130" Click="importLogButton_Click"/>
+            Content="Web-Log importieren" 
+            HorizontalAlignment="Left" 
+            Margin="124,118,0,0" 
+            VerticalAlignment="Top" 
+            Height="21" 
+            Width="130" 
+            Click="importLogButton_Click"/>
 
     </Grid>
 </UserControl>
