@@ -18,47 +18,66 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 		private void analysis1Button_Click(object sender, RoutedEventArgs e)
 		{
 			var helper = App.AppHost.Services.GetRequiredService<AnalysisHelper>();
+			var dbHelper = App.AppHost.Services.GetRequiredService<DbHelper>();
 			string startTimeString = null;
 			string endTimeString = null;
 
 			//Zeit-Filter
 			DateTime? startTime = null, endTime = null;
-			
+
+			// Überprüfung der Zeiträume
+			if (zeitraumVon.SelectedDate.HasValue && !zeitraumBis.SelectedDate.HasValue)
+			{
+				MessageBox.Show("Bitte geben Sie auch ein Enddatum an, wenn ein Startdatum ausgewählt wurde.");
+				return;
+			}
+			else if (!zeitraumVon.SelectedDate.HasValue && zeitraumBis.SelectedDate.HasValue)
+			{
+				MessageBox.Show("Bitte geben Sie auch ein Startdatum an, wenn ein Enddatum ausgewählt wurde.");
+				return;
+			}
+
 
 			if (zeitraumVon.SelectedDate.HasValue)
 			{
-				// var vonDate=zeitraumVon.SelectedDate.Value;
-				// int vonStunde = int.Parse(stundenAbCombo.SelectedValue.ToString());
-				// int vonMinute = int.Parse(minutenAbCombo.SelectedValue.ToString());
-				// int vonSekunde = int.Parse(sekundenAbCombo.SelectedValue.ToString());
-				// startTimeString = helper.BuildDateTime(vonDate, vonStunde, vonMinute);
-				
+				var vonDate=zeitraumVon.SelectedDate.Value;
+				int vonStunde = stundenAbCombo.SelectedValue != null ? int.Parse(stundenAbCombo.SelectedValue.ToString()) : 0;
+				int vonMinute = minutenAbCombo.SelectedValue != null ? int.Parse(minutenAbCombo.SelectedValue.ToString()) : 0;
+				int vonSekunde = sekundenAbCombo.SelectedValue != null ? int.Parse(sekundenAbCombo.SelectedValue.ToString()) : 0;
+				startTimeString = helper.BuildDateTime(vonDate, vonStunde, vonMinute, vonSekunde);
 			}
+
 			if (zeitraumBis.SelectedDate.HasValue)
 			{
-				// var bisDate = zeitraumBis.SelectedDate.Value;
-				// int bisStunde = int.Parse(stundenBisCombo.SelectedValue.ToString());
-				// int bisMinute = int.Parse(minutenBisCombo.SelectedValue.ToString());
-				// endTimeString = helper.BuildDateTime(bisDate, bisStunde, bisMinute);
+				var bisDate = zeitraumBis.SelectedDate.Value;
+				int bisStunde = stundenBisCombo.SelectedValue != null ? int.Parse(stundenBisCombo.SelectedValue.ToString()) : 0;
+				int bisMinute = minutenBisCombo.SelectedValue != null ? int.Parse(minutenBisCombo.SelectedValue.ToString()) : 0;
+				int bisSekunde = sekundenBisCombo.SelectedValue != null ? int.Parse(sekundenBisCombo.SelectedValue.ToString()) : 0;
+				endTimeString = helper.BuildDateTime(bisDate, bisStunde, bisMinute, bisSekunde);
 			}
 
 
 			// IP-Filter
-			string ipFilter = string.IsNullOrWhiteSpace(searchIpTxt.Text) || !DbHelper.IpIsValid(searchIpTxt.Text) ? null : searchIpTxt.Text;
+			string ipFilter = string.IsNullOrWhiteSpace(searchIpTxt.Text)  ? null : searchIpTxt.Text;
+			if (!string.IsNullOrEmpty(searchIpTxt.Text)&& !dbHelper.IpIsValid(searchIpTxt.Text))
+			{
+				MessageBox.Show("IP-Adresse ist ungültig");
+			}
+			else
+			{
+				ipFilter = searchIpTxt.Text;
+				//MessageBox.Show($"StartTime: {startTimeString}, EndTime: {endTimeString}, IP Filter: {ipFilter}");
+				//Datenbankabfrage
+				List<LogEintrag> logEintrag = dbHelper.GetFilteredLogEntriesI(startTimeString, endTimeString, ipFilter);
+
+				MessageBox.Show($"Anzahl der Einträge: {logEintrag.Count}");
+
+				//DataGrid reseten
+				LogDataGrid.ItemsSource = null;
+				//Ergebnis anzeigen
+				LogDataGrid.ItemsSource = logEintrag;
+			}
 			
-
-			//MessageBox.Show($"StartTime: {startTimeString}, EndTime: {endTimeString}, IP Filter: {ipFilter}");
-
-			//Datenbankabfrage
-			var dbHelper = App.AppHost.Services.GetRequiredService<DbHelper>();
-			List<LogEintrag> logEintrag = dbHelper.GetFilteredLogEntriesI(startTimeString, endTimeString, ipFilter);
-
-			MessageBox.Show($"Anzahl der Einträge: {logEintrag.Count}");
-
-			//DataGrid reseten
-			LogDataGrid.ItemsSource = null;
-			//Ergebnis anzeigen
-			LogDataGrid.ItemsSource = logEintrag;
 		}
 		private void FillTimeComboBox()
 		{
@@ -71,6 +90,11 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 			{
 				minutenAbCombo.Items.Add(i);
 				minutenBisCombo.Items.Add(i);
+			}
+			for (int i = 0; i < 60; i++)
+			{
+				sekundenAbCombo.Items.Add(i);
+				sekundenBisCombo.Items.Add(i);
 			}
 		}
 

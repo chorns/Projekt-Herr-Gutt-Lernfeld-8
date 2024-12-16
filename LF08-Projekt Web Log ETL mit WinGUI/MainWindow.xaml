@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LF08_Projekt_Web_Log_ETL_mit_WinGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="1200"
+        Title="MainWindow" Height="700" Width="1200"
         Background="Transparent"
         WindowStartupLocation="CenterScreen">
     <Border CornerRadius="20" Background="#272537">
@@ -30,16 +30,17 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <RadioButton x:Name="HomeButton"
+                    <RadioButton x:Name="homeButton"
                                  Content="Auftrag"
                                  Foreground="White"
                                  FontSize="30"
                                  Style="{StaticResource MenuButtonTheme}"
                                  FontWeight="Bold" 
-                                 FontStyle="Italic"
                                  Checked="LoadUserControl"
                                  />
-                    <Rectangle Height="25"/>
+
+                    <Rectangle Height="30"/>
+
                     <RadioButton x:Name="importLogFilesButton"
                                  Content="Import"
                                  Foreground="White"
@@ -48,6 +49,8 @@
                                  Style="{StaticResource MenuButtonTheme}"
                                  Checked="LoadUserControl"
                                  />
+
+                    <Rectangle Height="30"/>
 
                     <RadioButton x:Name="analyzeLogButtonI"
                                  Content="Analyse I"
@@ -76,7 +79,7 @@
                                  Checked="LoadUserControl"
                     />
 
-                    <Rectangle Height="120"/>
+                    <Rectangle Height="275"/>
 
                     <RadioButton x:Name="closeButton"
                                  Content="Beenden"

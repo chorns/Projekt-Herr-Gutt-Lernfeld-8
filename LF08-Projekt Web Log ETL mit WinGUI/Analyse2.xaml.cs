@@ -29,7 +29,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 		private void analysis2Button_Click(object sender, RoutedEventArgs e)
 		{
 			var helper = App.AppHost.Services.GetRequiredService<AnalysisHelper>();
-			string ipFilter;
+			var dbHelper = App.AppHost.Services.GetRequiredService<DbHelper>();
 			string startTimeString = null;
 			string endTimeString = null;
 
@@ -37,34 +37,48 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 			DateTime? startTime = null, endTime = null;
 
 
+			// Überprüfung der Zeiträume
+			if (zeitraumVon.SelectedDate.HasValue && !zeitraumBis.SelectedDate.HasValue)
+			{
+				MessageBox.Show("Bitte geben Sie auch ein Enddatum an, wenn ein Startdatum ausgewählt wurde.");
+				return;
+			}
+			else if (!zeitraumVon.SelectedDate.HasValue && zeitraumBis.SelectedDate.HasValue)
+			{
+				MessageBox.Show("Bitte geben Sie auch ein Startdatum an, wenn ein Enddatum ausgewählt wurde.");
+				return;
+			}
+
+
 			if (zeitraumVon.SelectedDate.HasValue)
 			{
 				var vonDate = zeitraumVon.SelectedDate.Value;
-				int vonStunde = int.Parse(stundenAbCombo.SelectedValue.ToString());
-				int vonMinute = int.Parse(minutenAbCombo.SelectedValue.ToString());
-				int vonSekunde = int.Parse(sekundenAbCombo.SelectedValue.ToString());
+				int vonStunde = stundenAbCombo.SelectedValue != null ? int.Parse(stundenAbCombo.SelectedValue.ToString()) : 0;
+				int vonMinute = minutenAbCombo.SelectedValue != null ? int.Parse(minutenAbCombo.SelectedValue.ToString()) : 0;
+				int vonSekunde = sekundenAbCombo.SelectedValue != null ? int.Parse(sekundenAbCombo.SelectedValue.ToString()) : 0;
 				startTimeString = helper.BuildDateTime(vonDate, vonStunde, vonMinute, vonSekunde);
 
 			}
 			if (zeitraumBis.SelectedDate.HasValue)
 			{
 				var bisDate = zeitraumBis.SelectedDate.Value;
-				int bisStunde = int.Parse(stundenBisCombo.SelectedValue.ToString());
-				int bisMinute = int.Parse(minutenBisCombo.SelectedValue.ToString());
-				int bisSekunde = int.Parse(sekundenBisCombo.SelectedValue.ToString());
+				int bisStunde = stundenBisCombo.SelectedValue != null ? int.Parse(stundenBisCombo.SelectedValue.ToString()) : 0;
+				int bisMinute = minutenBisCombo.SelectedValue != null ? int.Parse(minutenBisCombo.SelectedValue.ToString()) : 0;
+				int bisSekunde = sekundenBisCombo.SelectedValue != null ? int.Parse(sekundenBisCombo.SelectedValue.ToString()) : 0;
 				endTimeString = helper.BuildDateTime(bisDate, bisStunde, bisMinute, bisSekunde);
 			}
 
 			// IP-Filter
-			ipFilter = searchIpTxt.Text;
-			if (string.IsNullOrWhiteSpace(searchIpTxt.Text)|| !DbHelper.IpIsValid(searchIpTxt.Text))
+
+			string ipFilter = string.IsNullOrWhiteSpace(searchIpTxt.Text) ? null : searchIpTxt.Text;
+			if (!string.IsNullOrEmpty(searchIpTxt.Text) && !dbHelper.IpIsValid(searchIpTxt.Text))
 			{
 				MessageBox.Show("IP-Adresse ist ungültig");
 			}
 			else
 			{
+				ipFilter = searchIpTxt.Text;
 				//Datenbankabfrage
-				var dbHelper = App.AppHost.Services.GetRequiredService<DbHelper>();
 				List<dynamic> logEintrag = dbHelper.GetFilteredLogEntriesII(startTimeString, endTimeString, ipFilter);
 
 				MessageBox.Show($"Anzahl der Einträge: {logEintrag.Count}");

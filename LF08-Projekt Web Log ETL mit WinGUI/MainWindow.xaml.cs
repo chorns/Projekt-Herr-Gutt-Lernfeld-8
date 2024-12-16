@@ -18,6 +18,12 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 	public partial class MainWindow : Window
 	{
 		private DbHelper _dbHelper;
+		private DefaultUserControl defaultUserControl;
+		private ImportLogUserControl importLogUserControl;
+		private Analyse1 analyse1;
+		private Analyse2 analyse2;
+		private Analyse3 analyse3;
+
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -35,20 +41,40 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 				switch(pageName)
 				{
 					case "homeButton":
-						page = new DefaultUserControl();
-						HomeButton.IsChecked = false;
+						if (defaultUserControl == null)
+						{
+							defaultUserControl = new DefaultUserControl();
+						}
+
+						page = defaultUserControl;
 						break;
 					case "importLogFilesButton":
-						page = new ImportLogUserControl();
+						if (importLogUserControl == null)
+						{
+							importLogUserControl = new ImportLogUserControl();
+						}
+						page = importLogUserControl;
 						break;
 					case "analyzeLogButtonI":
-						page = new Analyse1();
+						if (analyse1 == null)
+						{
+							analyse1= new Analyse1();
+						}
+						page = analyse1;
 						break;
 					case "analyzeLogButtonII":
-						page = new Analyse2();
+						if(analyse2 == null)
+						{
+							analyse2 = new Analyse2();
+						}
+						page = analyse2;
 						break;
 					case "analyzeLogButtonIII":
-						page = new Analyse3();
+						if(analyse3==null)
+						{
+							analyse3 = new Analyse3();
+						}
+						page = analyse3;
 						break;
 					case "closeButton":
 						Application.Current.Shutdown();

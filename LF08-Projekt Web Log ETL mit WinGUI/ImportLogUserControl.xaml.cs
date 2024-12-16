@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using LF08_Projekt_Web_Log_ETL_mit_WinGUI.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using Microsoft.Data.Sqlite;
 using System.Data.SQLite;
+using System.IO;
 using LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper;
 using LF08_Projekt_Web_Log_ETL_mit_WinGUI.Interfaces;
 
@@ -55,6 +45,9 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 			var dbHelper = App.AppHost.Services.GetRequiredService<DbHelper>();
 			//DateiPfad aus SaveFileDialog holen
 			string filePath = filePathTxt.Text;
+			//Dateinamen aus Pfad holen
+			string fileName = Path.GetFileName(filePath);
+
 			//Check ob TextBox leer ist
 			if (string.IsNullOrEmpty(filePath))
 			{
@@ -62,8 +55,22 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 			}
 			else
 			{
-				dbHelper.ImportData(filePath);
-				MessageBox.Show("Daten wurden erfolgreich importiert", "Erfolg", MessageBoxButton.OK, MessageBoxImage.Information);
+				if (logFileListBox.Items.Contains(fileName))
+				{
+					MessageBox.Show("Datei wurde bereits importiert", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+				}
+				else
+				{
+					//Dateinamen in ListBox speichern
+					logFileListBox.Items.Add(fileName);
+
+					logFileListBox.Visibility= Visibility.Visible;
+					listBoxLbl.Visibility = Visibility.Visible;
+					
+					//Daten importieren
+					dbHelper.ImportData(filePath);
+					MessageBox.Show("Daten wurden erfolgreich importiert", "Erfolg", MessageBoxButton.OK, MessageBoxImage.Information);
+				}
 			}
 		}
 	}

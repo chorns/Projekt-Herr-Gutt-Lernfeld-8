@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LF08_Projekt_Web_Log_ETL_mit_WinGUI"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="625" d:DesignWidth="800"
              Background="#22202f">
     <Grid>
         <Label Content="Anzeigen von Log-Datei-Einträgen" 
@@ -18,14 +18,14 @@
            />
 
 
-        <Label Content="Zeitraum" 
+        <Label Content="Zeitraum :" 
            HorizontalAlignment="Left" 
-           Margin="27,112,0,0" 
+           Margin="29,136,0,0" 
            VerticalAlignment="Top"
            Foreground="white"
            FontSize="25"/>
 
-        <Label Content="IP" 
+        <Label Content="IP :" 
            HorizontalAlignment="Left" 
            Margin="103,69,0,0" 
            VerticalAlignment="Top"
@@ -34,7 +34,7 @@
 
         <DatePicker x:Name="zeitraumVon"
                 HorizontalAlignment="Left" 
-                Margin="186,126,0,0" 
+                Margin="211,132,0,0" 
                 VerticalAlignment="Top"/>
 
         <TextBox x:Name="searchIpTxt"
@@ -46,27 +46,27 @@
 
         <Label Content="von" 
            HorizontalAlignment="Left" 
-           Margin="143,119,0,0" 
+           Margin="168,125,0,0" 
            VerticalAlignment="Top"
            Foreground="white"
            FontSize="20"/>
 
         <Label Content="bis" 
            HorizontalAlignment="Left" 
-           Margin="472,120,0,0" 
+           Margin="172,168,0,0" 
            VerticalAlignment="Top"
            Foreground="white"
            FontSize="20"/>
 
         <DatePicker x:Name="zeitraumBis"
                 HorizontalAlignment="Left" 
-                Margin="512,126,0,0" 
+                Margin="211,174,0,0" 
                 VerticalAlignment="Top"/>
 
         <Button x:Name="analysis3Button"
             Content="Filter anwenden" 
             HorizontalAlignment="Left" 
-            Margin="327,182,0,0" 
+            Margin="327,228,0,0" 
             VerticalAlignment="Top" 
             Height="34" 
             Width="94" Click="analysis3Button_Click" 
@@ -83,57 +83,86 @@
 
         <ComboBox x:Name="stundenAbCombo"
         HorizontalAlignment="Left" 
-        Margin="327,128,0,0" 
+        Margin="352,134,0,0" 
         VerticalAlignment="Top" 
         Width="50" 
         Height="23"/>
 
         <Label Content=":" 
            HorizontalAlignment="Left" 
-           Margin="377,119,0,0" 
+           Margin="402,125,0,0" 
            VerticalAlignment="Top"
            Foreground="white"
            FontSize="20"/>
 
         <ComboBox x:Name="minutenAbCombo"
               HorizontalAlignment="Left" 
-              Margin="396,128,0,0" 
+              Margin="421,136,0,0" 
               VerticalAlignment="Top" 
               Width="50" 
               Height="23"/>
 
         <ComboBox x:Name="stundenBisCombo"
               HorizontalAlignment="Left" 
-              Margin="641,128,0,0" 
+              Margin="349,176,0,0" 
               VerticalAlignment="Top" 
               Width="50" 
               Height="23"/>
 
         <Label Content=":" 
            HorizontalAlignment="Left" 
-           Margin="696,120,0,0" 
+           Margin="402,168,0,0" 
            VerticalAlignment="Top"
            Foreground="white"
            FontSize="20"/>
 
         <ComboBox x:Name="minutenBisCombo"
               HorizontalAlignment="Left" 
-              Margin="715,128,0,0" 
+              Margin="421,176,0,0" 
               VerticalAlignment="Top" 
               Width="50" 
               Height="23"/>
 
-        <Label Content="HTTP Statuscode" 
+        <Label Content="HTTP Statuscode :" 
                HorizontalAlignment="Left" 
                Margin="337,69,0,0" 
                VerticalAlignment="Top"
                Foreground="White"
                FontSize="25"/>
+
         <ComboBox x:Name="statusCodeCombo"
             HorizontalAlignment="Left" 
             Margin="546,80,0,0" 
             VerticalAlignment="Top" 
             Width="120"/>
+
+        <Label Content=":" 
+            HorizontalAlignment="Left" 
+            Margin="476,169,0,0" 
+            VerticalAlignment="Top"
+            Foreground="white"
+            FontSize="20"/>
+
+        <Label Content=":" 
+            HorizontalAlignment="Left" 
+            Margin="476,125,0,0" 
+            VerticalAlignment="Top"
+            Foreground="white"
+            FontSize="20"/>
+
+        <ComboBox x:Name="sekundenAbCombo"
+                  HorizontalAlignment="Left" 
+                  Margin="495,136,0,0" 
+                  VerticalAlignment="Top" 
+                  Width="50" 
+                  Height="23"/>
+
+        <ComboBox x:Name="sekundenBisCombo"
+                  HorizontalAlignment="Left" 
+                  Margin="495,176,0,0" 
+                  VerticalAlignment="Top" 
+                  Width="50" 
+                  Height="23"/>
 
 
     </Grid>

@@ -149,7 +149,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 				MessageBox.Show($"Es wurden {counterInvalidIp+counterDuplicate} Datensätze übersprungen. \n\nDoppelte Datensätze: {counterDuplicate}\nUngültige IP-Adressen: {counterInvalidIp}");
 			}
 		}
-		public static bool IpIsValid(string ipAdress)
+		public bool IpIsValid(string ipAdress)
 		{
 			return IPAddress.TryParse(ipAdress, out _);
 		}
