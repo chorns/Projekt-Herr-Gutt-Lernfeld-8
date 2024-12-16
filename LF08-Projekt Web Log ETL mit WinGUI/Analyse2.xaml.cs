@@ -23,7 +23,8 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
         public Analyse2()
         {
             InitializeComponent();
-        }
+			FillTimeComboBox();
+		}
 
 		private void analysis2Button_Click(object sender, RoutedEventArgs e)
 		{
@@ -41,7 +42,8 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 				var vonDate = zeitraumVon.SelectedDate.Value;
 				int vonStunde = int.Parse(stundenAbCombo.SelectedValue.ToString());
 				int vonMinute = int.Parse(minutenAbCombo.SelectedValue.ToString());
-				startTimeString = helper.BuildDateTime(vonDate, vonStunde, vonMinute);
+				int vonSekunde = int.Parse(sekundenAbCombo.SelectedValue.ToString());
+				startTimeString = helper.BuildDateTime(vonDate, vonStunde, vonMinute, vonSekunde);
 
 			}
 			if (zeitraumBis.SelectedDate.HasValue)
@@ -49,7 +51,8 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 				var bisDate = zeitraumBis.SelectedDate.Value;
 				int bisStunde = int.Parse(stundenBisCombo.SelectedValue.ToString());
 				int bisMinute = int.Parse(minutenBisCombo.SelectedValue.ToString());
-				endTimeString = helper.BuildDateTime(bisDate, bisStunde, bisMinute);
+				int bisSekunde = int.Parse(sekundenBisCombo.SelectedValue.ToString());
+				endTimeString = helper.BuildDateTime(bisDate, bisStunde, bisMinute, bisSekunde);
 			}
 
 			// IP-Filter
@@ -72,5 +75,23 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 				LogDataGrid.ItemsSource = logEintrag;
 			}
 		}
-    }
+		private void FillTimeComboBox()
+		{
+			for (int i = 0; i < 24; i++)
+			{
+				stundenAbCombo.Items.Add(i);
+				stundenBisCombo.Items.Add(i);
+			}
+			for (int i = 0; i < 60; i++)
+			{
+				minutenAbCombo.Items.Add(i);
+				minutenBisCombo.Items.Add(i);
+			}
+			for (int i = 0; i < 60; i++)
+			{
+				sekundenAbCombo.Items.Add(i);
+				sekundenBisCombo.Items.Add(i);
+			}
+		}
+	}
 }

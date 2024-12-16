@@ -183,7 +183,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 							var entry = new
 							{
 								Id = id++,
-								http_statuscode = reader.GetString(0),
+								http_statuscode = reader.GetInt32(0),
 								EntryCount = reader.GetInt32(1)
 
 							};
@@ -204,7 +204,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 			if (!string.IsNullOrEmpty(ipFilter))
 				query += $" AND ip_adress = '{ipFilter}'";
 
-			query += " GROUP BY ip_adress ORDER BY access_count DESC";
+			query += " GROUP BY ip_adress ORDER BY EntryCount DESC";
 
 			MessageBox.Show(query);
 
@@ -288,7 +288,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 					{
 						while (reader.Read())
 						{
-							statusCodes.Add(reader.GetString(0));
+							statusCodes.Add(reader.GetInt32(0).ToString());
 						}
 					}
 				}

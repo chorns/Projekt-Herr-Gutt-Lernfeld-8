@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LF08_Projekt_Web_Log_ETL_mit_WinGUI"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="550" d:DesignWidth="800"
              Background="#22202f">
     <Grid>
         <Label Content="Anzeigen von Log-Datei-Einträgen" 
@@ -53,20 +53,20 @@
 
         <Label Content="bis" 
            HorizontalAlignment="Left" 
-           Margin="472,120,0,0" 
+           Margin="153,163,0,0" 
            VerticalAlignment="Top"
            Foreground="white"
            FontSize="20"/>
 
         <DatePicker x:Name="zeitraumBis"
                 HorizontalAlignment="Left" 
-                Margin="512,126,0,0" 
+                Margin="193,169,0,0" 
                 VerticalAlignment="Top"/>
 
         <Button x:Name="analysis2Button"
             Content="Filter anwenden" 
             HorizontalAlignment="Left" 
-            Margin="327,182,0,0" 
+            Margin="327,228,0,0" 
             VerticalAlignment="Top" 
             Height="34" 
             Width="94" Click="analysis2Button_Click" 
@@ -104,24 +104,26 @@
 
         <ComboBox x:Name="stundenBisCombo"
               HorizontalAlignment="Left" 
-              Margin="641,128,0,0" 
+              Margin="322,171,0,0" 
               VerticalAlignment="Top" 
               Width="50" 
               Height="23"/>
 
         <Label Content=":" 
            HorizontalAlignment="Left" 
-           Margin="696,120,0,0" 
+           Margin="377,163,0,0" 
            VerticalAlignment="Top"
            Foreground="white"
            FontSize="20"/>
 
         <ComboBox x:Name="minutenBisCombo"
               HorizontalAlignment="Left" 
-              Margin="715,128,0,0" 
+              Margin="396,171,0,0" 
               VerticalAlignment="Top" 
               Width="50" 
               Height="23"/>
+        <ComboBox x:Name="sekundenAbCombo" HorizontalAlignment="Left" Margin="467,129,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox x:Name="sekundenBisCombo" HorizontalAlignment="Left" Margin="467,172,0,0" VerticalAlignment="Top" Width="120"/>
 
 
     </Grid>

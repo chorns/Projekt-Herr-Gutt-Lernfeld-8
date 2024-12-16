@@ -24,6 +24,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
         {
             InitializeComponent();
 			FillStatusComboBox();
+			FillTimeComboBox();
 		}
 
 		private void analysis3Button_Click(object sender, RoutedEventArgs e)
@@ -46,18 +47,18 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 
 			if (zeitraumVon.SelectedDate.HasValue)
 			{
-				var vonDate = zeitraumVon.SelectedDate.Value;
-				int vonStunde = int.Parse(stundenAbCombo.SelectedValue.ToString());
-				int vonMinute = int.Parse(minutenAbCombo.SelectedValue.ToString());
-				startTimeString = helper.BuildDateTime(vonDate, vonStunde, vonMinute);
+				// var vonDate = zeitraumVon.SelectedDate.Value;
+				// int vonStunde = int.Parse(stundenAbCombo.SelectedValue.ToString());
+				// int vonMinute = int.Parse(minutenAbCombo.SelectedValue.ToString());
+				// startTimeString = helper.BuildDateTime(vonDate, vonStunde, vonMinute);
 
 			}
 			if (zeitraumBis.SelectedDate.HasValue)
 			{
-				var bisDate = zeitraumBis.SelectedDate.Value;
-				int bisStunde = int.Parse(stundenBisCombo.SelectedValue.ToString());
-				int bisMinute = int.Parse(minutenBisCombo.SelectedValue.ToString());
-				endTimeString = helper.BuildDateTime(bisDate, bisStunde, bisMinute);
+				// var bisDate = zeitraumBis.SelectedDate.Value;
+				// int bisStunde = int.Parse(stundenBisCombo.SelectedValue.ToString());
+				// int bisMinute = int.Parse(minutenBisCombo.SelectedValue.ToString());
+				// endTimeString = helper.BuildDateTime(bisDate, bisStunde, bisMinute);
 			}
 
 			//Status-Code-Filter
@@ -67,13 +68,13 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 			}
 
 			// IP-Filter
-			ipFilter = searchIpTxt.Text;
 			if (string.IsNullOrWhiteSpace(searchIpTxt.Text) || !DbHelper.IpIsValid(searchIpTxt.Text))
 			{
 				MessageBox.Show("IP-Adresse ist ungültig");
 			}
 			else
 			{
+				ipFilter = searchIpTxt.Text;
 				//Datenbankabfrage
 				List<dynamic> logEintrag = dbHelper.GetFilteredLogEntriesIII(startTimeString, endTimeString, ipFilter,statusCodeFilter);
 
@@ -93,6 +94,19 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 			foreach (var statusCode in statusCodeList)
 			{
 				statusCodeCombo.Items.Add(statusCode);
+			}
+		}
+		private void FillTimeComboBox()
+		{
+			for (int i = 0; i < 24; i++)
+			{
+				stundenAbCombo.Items.Add(i);
+				stundenBisCombo.Items.Add(i);
+			}
+			for (int i = 0; i < 60; i++)
+			{
+				minutenAbCombo.Items.Add(i);
+				minutenBisCombo.Items.Add(i);
 			}
 		}
 	}

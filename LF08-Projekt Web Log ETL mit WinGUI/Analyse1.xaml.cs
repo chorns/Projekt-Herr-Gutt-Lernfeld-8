@@ -27,18 +27,19 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 
 			if (zeitraumVon.SelectedDate.HasValue)
 			{
-				var vonDate=zeitraumVon.SelectedDate.Value;
-				int vonStunde = int.Parse(stundenAbCombo.SelectedValue.ToString());
-				int vonMinute = int.Parse(minutenAbCombo.SelectedValue.ToString());
-				startTimeString = helper.BuildDateTime(vonDate, vonStunde, vonMinute);
+				// var vonDate=zeitraumVon.SelectedDate.Value;
+				// int vonStunde = int.Parse(stundenAbCombo.SelectedValue.ToString());
+				// int vonMinute = int.Parse(minutenAbCombo.SelectedValue.ToString());
+				// int vonSekunde = int.Parse(sekundenAbCombo.SelectedValue.ToString());
+				// startTimeString = helper.BuildDateTime(vonDate, vonStunde, vonMinute);
 				
 			}
 			if (zeitraumBis.SelectedDate.HasValue)
 			{
-				var bisDate = zeitraumBis.SelectedDate.Value;
-				int bisStunde = int.Parse(stundenBisCombo.SelectedValue.ToString());
-				int bisMinute = int.Parse(minutenBisCombo.SelectedValue.ToString());
-				endTimeString = helper.BuildDateTime(bisDate, bisStunde, bisMinute);
+				// var bisDate = zeitraumBis.SelectedDate.Value;
+				// int bisStunde = int.Parse(stundenBisCombo.SelectedValue.ToString());
+				// int bisMinute = int.Parse(minutenBisCombo.SelectedValue.ToString());
+				// endTimeString = helper.BuildDateTime(bisDate, bisStunde, bisMinute);
 			}
 
 

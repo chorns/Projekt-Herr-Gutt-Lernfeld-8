@@ -4,7 +4,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper;
 
 public class AnalysisHelper
 {
-	public string BuildDateTime(DateTime date,int hour, int minute)
+	public string BuildDateTime(DateTime date,int hour, int minute, int sekunde)
 	{
 		StringBuilder dateAsString = new StringBuilder();
 		dateAsString.Append(date.Year);
@@ -16,7 +16,8 @@ public class AnalysisHelper
 		dateAsString.Append(hour.ToString("00"));
 		dateAsString.Append(":");
 		dateAsString.Append(minute.ToString("00"));
-		dateAsString.Append(":00");
+		dateAsString.Append(":");
+		dateAsString.Append(sekunde.ToString("00"));
 		dateAsString.Append(".000000");
 		return dateAsString.ToString();
 

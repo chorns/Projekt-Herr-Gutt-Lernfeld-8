@@ -50,13 +50,31 @@
                                  />
 
                     <RadioButton x:Name="analyzeLogButtonI"
-                                 Content="Analyse"
+                                 Content="Analyse I"
                                  Foreground="White"
                                  FontSize="30"
                                  FontWeight="Bold"
                                  Style="{StaticResource MenuButtonTheme}"
                                  Checked="LoadUserControl"
                                  />
+
+                    <RadioButton x:Name="analyzeLogButtonII"
+                                 Content="Analyse II"
+                                 Foreground="White"
+                                 FontSize="30"
+                                 FontWeight="Bold"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Checked="LoadUserControl"
+                    />
+
+                    <RadioButton x:Name="analyzeLogButtonIII"
+                                 Content="Analyse III"
+                                 Foreground="White"
+                                 FontSize="30"
+                                 FontWeight="Bold"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Checked="LoadUserControl"
+                    />
 
                     <Rectangle Height="120"/>
 

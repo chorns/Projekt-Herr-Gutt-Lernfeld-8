@@ -44,6 +44,12 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 					case "analyzeLogButtonI":
 						page = new Analyse1();
 						break;
+					case "analyzeLogButtonII":
+						page = new Analyse2();
+						break;
+					case "analyzeLogButtonIII":
+						page = new Analyse3();
+						break;
 					case "closeButton":
 						Application.Current.Shutdown();
 						break;
