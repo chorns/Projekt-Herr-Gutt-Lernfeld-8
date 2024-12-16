@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LF08_Projekt_Web_Log_ETL_mit_WinGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800"
+        Title="MainWindow" Height="500" Width="1200"
         Background="Transparent"
         WindowStartupLocation="CenterScreen">
     <Border CornerRadius="20" Background="#272537">
@@ -26,7 +26,7 @@
             />
             <Grid Grid.Row="1" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="220"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <StackPanel>
@@ -50,31 +50,13 @@
                                  />
 
                     <RadioButton x:Name="analyzeLogButtonI"
-                                 Content="Analyse I"
+                                 Content="Analyse"
                                  Foreground="White"
                                  FontSize="30"
                                  FontWeight="Bold"
                                  Style="{StaticResource MenuButtonTheme}"
                                  Checked="LoadUserControl"
                                  />
-
-                    <RadioButton x:Name="analyzeLogButtonII"
-                                 Content="Analyse II"
-                                 Foreground="White"
-                                 FontSize="30"
-                                 FontWeight="Bold"
-                                 Style="{StaticResource MenuButtonTheme}"
-                                 Checked="LoadUserControl"
-                    />
-
-                    <RadioButton x:Name="analyzeLogButtonIII"
-                                 Content="Analyse III"
-                                 Foreground="White"
-                                 FontSize="30"
-                                 FontWeight="Bold"
-                                 Style="{StaticResource MenuButtonTheme}"
-                                 Checked="LoadUserControl"
-                    />
 
                     <Rectangle Height="120"/>
 

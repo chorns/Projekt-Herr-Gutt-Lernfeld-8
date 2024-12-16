@@ -36,6 +36,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 				{
 					case "homeButton":
 						page = new DefaultUserControl();
+						HomeButton.IsChecked = false;
 						break;
 					case "importLogFilesButton":
 						page = new ImportLogUserControl();

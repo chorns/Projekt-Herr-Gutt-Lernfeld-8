@@ -17,7 +17,10 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 
 		private void analysis1Button_Click(object sender, RoutedEventArgs e)
 		{
-			
+			var helper = App.AppHost.Services.GetRequiredService<AnalysisHelper>();
+			string startTimeString = null;
+			string endTimeString = null;
+
 			//Zeit-Filter
 			DateTime? startTime = null, endTime = null;
 			
@@ -27,29 +30,32 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 				var vonDate=zeitraumVon.SelectedDate.Value;
 				int vonStunde = int.Parse(stundenAbCombo.SelectedValue.ToString());
 				int vonMinute = int.Parse(minutenAbCombo.SelectedValue.ToString());
-				startTime = new DateTime(vonDate.Year, vonDate.Month, vonDate.Day, vonStunde, vonMinute, 0);
+				startTimeString = helper.BuildDateTime(vonDate, vonStunde, vonMinute);
+				
 			}
 			if (zeitraumBis.SelectedDate.HasValue)
 			{
 				var bisDate = zeitraumBis.SelectedDate.Value;
 				int bisStunde = int.Parse(stundenBisCombo.SelectedValue.ToString());
 				int bisMinute = int.Parse(minutenBisCombo.SelectedValue.ToString());
-				endTime = new DateTime(bisDate.Year, bisDate.Month, bisDate.Day, bisStunde, bisMinute, 0);
+				endTimeString = helper.BuildDateTime(bisDate, bisStunde, bisMinute);
 			}
 
-			//TODO: IP-Filter
-			//IP-Filter
-			string ipFilter = string.IsNullOrWhiteSpace(searchIpTxt.Text) ? null : searchIpTxt.Text;
-			if (!string.IsNullOrWhiteSpace(searchIpTxt.Text)&&!DbHelper.IpIsValid(searchIpTxt.Text))
-			{
-				MessageBox.Show("Die eingegebene IP-Adresse ist ungültig, es wird ohne IP gefiltert.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
-			}
+
+			// IP-Filter
+			string ipFilter = string.IsNullOrWhiteSpace(searchIpTxt.Text) || !DbHelper.IpIsValid(searchIpTxt.Text) ? null : searchIpTxt.Text;
+			
+
+			//MessageBox.Show($"StartTime: {startTimeString}, EndTime: {endTimeString}, IP Filter: {ipFilter}");
 
 			//Datenbankabfrage
 			var dbHelper = App.AppHost.Services.GetRequiredService<DbHelper>();
-			List<LogEintrag> logEintrag = dbHelper.GetFilteredLogEntries(startTime, endTime, ipFilter);
+			List<LogEintrag> logEintrag = dbHelper.GetFilteredLogEntriesI(startTimeString, endTimeString, ipFilter);
 
+			MessageBox.Show($"Anzahl der Einträge: {logEintrag.Count}");
+
+			//DataGrid reseten
+			LogDataGrid.ItemsSource = null;
 			//Ergebnis anzeigen
 			LogDataGrid.ItemsSource = logEintrag;
 		}
@@ -66,5 +72,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 				minutenBisCombo.Items.Add(i);
 			}
 		}
-    }
+
+		
+	}
 }

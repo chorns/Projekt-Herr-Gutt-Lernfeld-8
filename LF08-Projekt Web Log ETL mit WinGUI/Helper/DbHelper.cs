@@ -34,7 +34,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
         private static void CreateTable(SQLiteConnection connection)
         {
             string createTable = $"CREATE TABLE IF NOT EXISTS {_tableName} ("+
-                                 "ip_adress TEXT NOT NULL, " +
+								 "ip_adress TEXT NOT NULL, " +
                                  "identity TEXT,"+
                                  "authentification TEXT,"+
                                  "timestamp DATETIME NOT NULL, " +
@@ -51,7 +51,8 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 		
 		public void ImportData(string filePath)
 		{
-			int counter = 0;
+			int counterInvalidIp = 0;
+			int counterDuplicate = 0;
 			bool ipNotValid = false;
 			var logLines= File.ReadLines(filePath);
 			var connectionStringProvider = App.AppHost.Services.GetRequiredService<IConnectionStringProvider>();
@@ -72,15 +73,17 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 						if (!IpIsValid(ipAdress))
 						{
 							ipNotValid = true;
-							counter++;
+							counterInvalidIp++;
+							//MessageBox.Show($"Ungültige IP-Adresse übersprungen: {ipAdress}");
 							continue;
 						}
+
 						//TimeStamp extrahieren
 						int timeStampStart = line.IndexOf("[") + 1;
 						int timeStampEnd = line.IndexOf("]");
 						string timeStamp = line.Substring(timeStampStart, timeStampEnd - timeStampStart);
 
-						//Request in einzelne Teile zerlegen
+						//Request extrahieren
 						int requestStart = line.IndexOf("\"") + 1;
 						int requestEnd = line.LastIndexOf("\"");
 						string request = line.Substring(requestStart, requestEnd - requestStart);
@@ -101,7 +104,8 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 							var count = Convert.ToInt32(cmdCheck.ExecuteScalar());
 							if (count > 0)
 							{
-								MessageBox.Show($"Eintrag bereits vorhanden und wurde übersprungen.\n\nIP-Adresse: {ipAdress}\nTimestamp: {timeStamp}\nRequest: {request}");
+								counterDuplicate++;
+								//MessageBox.Show($"Eintrag bereits vorhanden und wird übersprungen.\n\nIP-Adresse: {ipAdress}\nTimestamp: {timeStamp}\nRequest: {request}");
 								continue;
 							}
 						}
@@ -142,24 +146,28 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 			}
 			if (ipNotValid)
 			{
-				MessageBox.Show($"Es wurden {counter} ungültige IP-Adressen übersprungen.");
+				MessageBox.Show($"Es wurden {counterInvalidIp+counterDuplicate} Datensätze übersprungen. \n\nDoppelte Datensätze: {counterDuplicate}\nUngültige IP-Adressen: {counterInvalidIp}");
 			}
 		}
 		public static bool IpIsValid(string ipAdress)
 		{
 			return IPAddress.TryParse(ipAdress, out _);
 		}
-		public List<LogEintrag> GetFilteredLogEntries(DateTime? startTime, DateTime? endTime, string ipFilter)
+		public List<dynamic> GetFilteredLogEntriesIII(string? startTime, string? endTime, string ipFilter, string statusCode)
 		{
-			var logEntries = new List<LogEintrag>();
-
-			string query = $"SELECT * FROM {_tableName} WHERE 1=1";
-			if (startTime.HasValue)
-				query += " AND timestamp >= @startTime";
-			if (endTime.HasValue)
-				query += " AND timestamp <= @endTime";
+			int id = 1;
+			var logEntries = new List<dynamic>();
+			string query = $"SELECT http_statuscode, COUNT(*) AS EntryCount FROM {_tableName} WHERE 1=1";
+			if (!string.IsNullOrEmpty(startTime) || !string.IsNullOrEmpty(endTime))
+				query += $" AND timestamp BETWEEN '{startTime}' AND '{endTime}'";
 			if (!string.IsNullOrEmpty(ipFilter))
-				query += " AND ip_adress = @ipFilter";
+				query += $" AND ip_adress = '{ipFilter}'";
+			if(!string.IsNullOrEmpty(statusCode))
+				query += $" AND http_statuscode = '{statusCode}'";
+
+			query += " GROUP BY http_statuscode";
+
+			MessageBox.Show(query);
 
 			var connectionStringProvider = App.AppHost.Services.GetRequiredService<IConnectionStringProvider>();
 			using (var connection = new SQLiteConnection(connectionStringProvider.GetConnectionString()))
@@ -168,36 +176,128 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI.Helper
 
 				using (var command = new SQLiteCommand(query, connection))
 				{
-					if (startTime.HasValue)
-						command.Parameters.AddWithValue("@startTime", startTime.Value);
-					if (endTime.HasValue)
-						command.Parameters.AddWithValue("@endTime", endTime.Value);
-					if (!string.IsNullOrEmpty(ipFilter))
-						command.Parameters.AddWithValue("@ipFilter", ipFilter);
+					using (var reader = command.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							var entry = new
+							{
+								Id = id++,
+								http_statuscode = reader.GetString(0),
+								EntryCount = reader.GetInt32(1)
 
+							};
+							logEntries.Add(entry);
+						}
+					}
+				}
+			}
+			return logEntries;
+		}
+		public List<dynamic> GetFilteredLogEntriesII(string? startTime, string? endTime, string ipFilter)
+		{
+			int id = 1;
+			var logEntries = new List<dynamic>();
+			string query = $"SELECT ip_adress, COUNT(*) AS EntryCount FROM {_tableName} WHERE 1=1";
+			if (!string.IsNullOrEmpty(startTime) || !string.IsNullOrEmpty(endTime))
+				query += $" AND timestamp BETWEEN '{startTime}' AND '{endTime}'";
+			if (!string.IsNullOrEmpty(ipFilter))
+				query += $" AND ip_adress = '{ipFilter}'";
+
+			query += " GROUP BY ip_adress ORDER BY access_count DESC";
+
+			MessageBox.Show(query);
+
+			var connectionStringProvider = App.AppHost.Services.GetRequiredService<IConnectionStringProvider>();
+			using (var connection = new SQLiteConnection(connectionStringProvider.GetConnectionString()))
+			{
+				connection.Open();
+
+				using (var command = new SQLiteCommand(query, connection))
+				{
+					using (var reader = command.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							var entry=new
+							{
+								Id = id++,
+								Ip_adress = reader.GetString(0),
+								EntryCount= reader.GetInt32(1)
+
+							};
+							logEntries.Add(entry);
+						}
+					}
+				}
+			}
+			return logEntries;
+		}
+		public List<LogEintrag> GetFilteredLogEntriesI(string? startTime, string? endTime, string ipFilter)
+		{
+			int id = 1;
+			var logEntries = new List<LogEintrag>();
+			string query = $"SELECT * FROM {_tableName} WHERE 1=1";
+			if (!string.IsNullOrEmpty(startTime) || !string.IsNullOrEmpty(endTime))
+				query += $" AND timestamp BETWEEN '{startTime}' AND '{endTime}'";
+			if (!string.IsNullOrEmpty(ipFilter))
+				query += $" AND ip_adress = '{ipFilter}'";
+
+			MessageBox.Show(query);
+
+			var connectionStringProvider = App.AppHost.Services.GetRequiredService<IConnectionStringProvider>();
+			using (var connection = new SQLiteConnection(connectionStringProvider.GetConnectionString()))
+			{
+				connection.Open();
+
+				using (var command = new SQLiteCommand(query, connection))
+				{
 					using (var reader = command.ExecuteReader())
 					{
 						while (reader.Read())
 						{
 							logEntries.Add(new LogEintrag
 							{
-								Id= reader.GetInt32(0),
-								Ip_adress = reader.GetString(1),
-								Identity = reader.GetString(2),
-								Authentification = reader.GetString(3),
-								Timestamp = reader.GetDateTime(4),
-								Request = reader.GetString(5),
-								Http_Statuscode = reader.GetInt32(6),
-								Responsesize = reader.GetInt32(7)
-								
+								Id = id++,
+								Ip_adress = reader.GetString(0),
+								Identity = !reader.IsDBNull(1) ? reader.GetString(1) : null,
+								Authentification = !reader.IsDBNull(2) ? reader.GetString(2) : null,
+								Timestamp = reader.GetDateTime(3),
+								Request = reader.GetString(4),
+								Http_Statuscode = reader.GetInt32(5),
+								Responsesize = !reader.IsDBNull(6) ? reader.GetInt32(6) : 0
+
 							});
 						}
 					}
 				}
 			}
-
 			return logEntries;
 		}
+		public List<string> GetStatusCodes()
+		{
+			string query = $"SELECT DISTINCT http_statuscode FROM {_tableName}";
+			var connectionStringProvider = App.AppHost.Services.GetRequiredService<IConnectionStringProvider>();
+			var statusCodes = new List<string>();
+			using (var connection = new SQLiteConnection(connectionStringProvider.GetConnectionString()))
+			{
+				connection.Open();
+				using (var command = new SQLiteCommand(query, connection))
+				{
+					using (var reader = command.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							statusCodes.Add(reader.GetString(0));
+						}
+					}
+				}
+			}
+
+			return statusCodes;
+
+		}
+
 	}
 }
 

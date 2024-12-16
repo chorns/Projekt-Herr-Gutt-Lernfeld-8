@@ -62,13 +62,15 @@
                     HorizontalAlignment="Left" 
                     Margin="512,126,0,0" 
                     VerticalAlignment="Top"/>
+
         <Button x:Name="analysis1Button"
                 Content="Filter anwenden" 
                 HorizontalAlignment="Left" 
-                Margin="337,177,0,0" 
+                Margin="327,182,0,0" 
                 VerticalAlignment="Top" 
                 Height="34" 
-                Width="94" Click="analysis1Button_Click"/>
+                Width="94" 
+                Click="analysis1Button_Click"/>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" 
                       HorizontalScrollBarVisibility="Auto" 
