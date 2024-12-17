@@ -28,7 +28,7 @@ namespace LF08_Projekt_Web_Log_ETL_mit_WinGUI
 			OpenFileDialog openFileDialog = new OpenFileDialog()
 			{
 				Title = "Log-Datei auswählen",
-				Filter = "Log-Dateien|*.log",
+				Filter = "Log-Dateien|*.log|Textdateien (*.txt)|*.txt",
 			};
 			if (openFileDialog.ShowDialog() == true)
 			{

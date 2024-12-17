@@ -19,7 +19,5 @@ public class AnalysisHelper
 		dateAsString.Append(":");
 		dateAsString.Append(sekunde.ToString("00"));
 		dateAsString.Append(".000000");
-		return dateAsString.ToString();
-
-	}
+		return dateAsString.ToString(); }
 }
